@@ -28,10 +28,6 @@ def CustomLaplacian(src, ddepth = cv2.CV_16S, kernel_size=3):
                                        [1, -4, 1],
                                        [0,  1, 0]], dtype=np.float32)
     
-    # cv2_laplacian_3x3 = np.array([[1,1,1],
-    #                               [1,-8,1],
-    #                               [1,1,1]], dtype=np.float32)
-    
     cv2_laplacian_3x3 = np.array([[2, 0, 2],
                            [0, -8, 0],
                            [2, 0, 2]], dtype=np.float32)
