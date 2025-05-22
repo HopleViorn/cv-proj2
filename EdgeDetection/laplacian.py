@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+from ops import numpy_conv2d, numpy_gaussian_blur
 
 # https://docs.opencv.org/3.4/d5/db5/tutorial_laplace_operator.html
 def StandLaplacian(src, ddepth = cv2.CV_16S, kernel_size=3):
@@ -20,24 +21,28 @@ def StandLaplacian(src, ddepth = cv2.CV_16S, kernel_size=3):
     return abs_dst
 
 def CustomLaplacian(src, ddepth = cv2.CV_16S, kernel_size=3):
-    # Your Job
-    # Remove noise by blurring with a Gaussian filter
-    src_blur = cv2.GaussianBlur(src, (3, 3), 0)
-
-    # Convert the image to grayscale
-    src_gray = cv2.cvtColor(src_blur, cv2.COLOR_BGR2GRAY)
+    src_gray = cv2.cvtColor(src, cv2.COLOR_BGR2GRAY)
+    src_gray = numpy_gaussian_blur(src_gray, 3, 1.0)
 
     standard_laplacian_3x3 = np.array([[0,  1, 0],
                                        [1, -4, 1],
                                        [0,  1, 0]], dtype=np.float32)
+    
+    # cv2_laplacian_3x3 = np.array([[1,1,1],
+    #                               [1,-8,1],
+    #                               [1,1,1]], dtype=np.float32)
+    
+    cv2_laplacian_3x3 = np.array([[2, 0, 2],
+                           [0, -8, 0],
+                           [2, 0, 2]], dtype=np.float32)
 
-    if kernel_size == 3:
-        kernel = standard_laplacian_3x3
-    else:
-        kernel = standard_laplacian_3x3
+    kernel = cv2_laplacian_3x3
 
-    dst_custom = cv2.filter2D(src_gray, ddepth, kernel)
-
+    dst_custom = numpy_conv2d(src_gray, kernel)
+    
+    if ddepth == cv2.CV_16S:
+        dst_custom = dst_custom.astype(np.int16)
+    
     abs_dst_custom = cv2.convertScaleAbs(dst_custom)
 
     return abs_dst_custom

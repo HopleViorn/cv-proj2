@@ -6,8 +6,6 @@ from sobel import CustomSobel, StandSobel
 from laplacian import CustomLaplacian, StandLaplacian
 import numpy as np
 
-from tqdm import tqdm
-
 def cal_metric(preds_vis, gt_vis):
     """
     Calculate accuracy, recall, and F1 score based on visible points.
@@ -56,7 +54,9 @@ if __name__ == "__main__":
         os.makedirs(args.output_dir)
 
 
-    for filename in tqdm(sorted(os.listdir(args.input_dir))):
+    for filename in sorted(os.listdir(args.input_dir)):
+
+        print(f"Processing {filename}")
         img = cv2.imread(os.path.join(args.input_dir, filename))
 
         if args.mode == "laplacian":
